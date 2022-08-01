@@ -1,0 +1,254 @@
+-- USE -- TO COMMENT
+
+--POSTGRESQL CLASS 2 OCTOBER
+SELECT * FROM ACTOR;
+
+SELECT * FROM RENTAL;
+SELECT * FROM FILM;
+
+SELECT TITLE, DESCRIPTION, RELEASE_YEAR from film;
+
+SELECT DISTINCT RELEASE_YEAR FROM FILM;
+SELECT RELEASE_YEAR FROM FILM;
+
+SELECT RENTAL_DURATION FROM FILM;
+SELECT DISTINCT RENTAL_DURATION FROM FILM;
+
+select distinct rating from film;
+
+
+--where statement
+
+select * from customer;
+
+select first_name, last_name  from customer;
+
+select first_name, last_name from customer
+where first_name = 'Jamie';
+
+
+--customer whose first name is jamie and last name is rice
+
+select first_name, last_name from customer
+where first_name = 'Jamie' AND last_name = 'Rice';
+
+
+--to select all records of customer whoseofirst name is Jamie and last name is rice
+
+select * from customer
+where first_name = 'Jamie' AND  last_name = 'Rice';
+
+select * from payment;
+
+
+-- who paid an 
+
+select customer_id, amount from payment
+where amount < 1 or amount > 8;
+
+
+-- A customer fotgot their wallet her wallet at our store, we found ID card, name is Nancy Thomas. Use your SQL skill to get the email
+
+select * from customer
+where  first_name = 'Nancy' AND last_name = 'Thomas';
+
+
+
+--Aggregate syntax
+
+
+--count
+select count (*) from film
+
+select count(film_id) from film;
+
+
+
+--min(maximum)
+select min(amount) from payment;
+
+--max
+--sum
+--avg
+
+
+
+--limit
+
+select film_id,title from film
+LIMIT 10;
+
+
+--ORDER BY (ASC OR DESC)
+--ascending = lowest to highest
+select first_name from customer
+order by first_name;
+
+select first_name, last_name from customer
+order by first_name asc;
+
+--descending = highest/largest to lowest/smallest =desc
+
+select first_name, last_name from customer
+order by last_name desc;
+
+select amount from payment
+order by amount desc;
+
+
+--assessment
+--Top ten highest paying customer
+
+select customer_id, amount from payment
+order by amount desc
+limit 10;
+
+
+--between
+--get the customer_id and rental_id for payments that are between 8 and 9 usd
+
+--wrong
+select customer_id, rental_id,amount from payment
+where amount >= 8 or amount <= 9;
+
+--right
+select customer_id,rental_id, amount from payment
+where amount >= 8 and amount <= 9;
+
+
+--using between
+select customer_id,rental_id, amount from payment
+where amount between 8 and 9;
+
+--Not between
+select customer_id,rental_id, amount from payment
+where amount not between 8 and 9;
+
+
+--IN
+--those whose customer_id are 120,123,125
+select customer_id,rental_id,amount from payment
+where customer_id =120 or customer_id =123 or customer_id =125;
+
+--using IN
+select customer_id,rental_id,amount from payment
+where customer_id IN (120,123,125);
+
+--NOT IN
+select customer_id,rental_id,amount from payment
+where customer_id NOT IN (120,123,125);
+
+
+--LIKE
+--% AND '_'
+--% = ALL CHARACTERS
+-- _ = SINGLE CHARACTERS
+
+
+--beginning
+
+SELECT first_name, last_name from customer
+where first_name like 'Jen%';
+
+--single character
+SELECT first_name, last_name from customer
+where first_name like 'Jenn__';
+
+SELECT first_name, last_name from customer
+where first_name like 'Jenn_';
+
+--End
+--those whose first name ends with 'er'
+SELECT first_name, last_name from customer
+where first_name like '%er';
+
+--between
+SELECT first_name, last_name from customer
+where first_name like '%th%';
+
+
+--GROUP BY
+select customer_id from payment;
+
+
+--WITHOUT AGGREGATE FUNCTION
+select customer_id from payment
+group by customer_id;
+
+
+--WITH AGGREGATE FUNCTIONS
+select customer_id, sum(amount), from payment
+group by customer_id
+order by sum(amount);
+
+
+select customer_id, count(amount) from payment
+group by customer_id
+order by count(amount);
+
+select customer_id, sum(amount),count(amount), min(amount), max(amount) from payment
+group by customer_id
+order by sum(amount);
+
+--ALIAS (AS)
+--USED TO RENAME COLUMNS
+select customer_id, sum(amount) AS TOTAL,count(amount) AS NO_OF_TRANSACTION, min(amount), max(amount) from payment
+group by customer_id
+order by sum(amount)
+
+
+--Having
+--used to filter groups
+--how much has the customer who spent above 200 spent exactly
+
+select customer_id, sum(amount) AS total_amount from payment
+group by customer_id
+having sum (amount) > 200;
+
+--we want to know the store that services over 300 customers
+select store_id, count(customer_id) from customer
+group by store_id
+having count(customer_id) > 300;
+
+
+--classwork
+--we want to know the average rental rate of these 3 ratings R,PG, G.
+
+select rating, avg(rental_rate) from film
+where rating in ('R', 'PG', 'G')
+group by rating;
+
+select rating, avg(rental_rate) from film
+group by rating
+having rating in ('R', 'PG', 'G');
+
+
+
+--JOIN
+--INNER JOIN
+--1. SPECIFY ALL THE COLUMS
+--COMBINE CUSTOMER AND PAYMENT TABLE
+
+select * from customer;
+--CUSTOMER_ID, FIRST_NAME, LAST_NAME
+
+select * from payment;
+--PAYMENT_ID, CUSTOMER_ID, AMOUNT FROM TABLE B
+
+--JOINING
+select CUSTOMER_ID, FIRST_NAME, LAST_NAME, PAYMENT_ID, CUSTOMER_ID,AMOUNT
+FROM CUSTOMER INNER JOIN PAYMENT ON CUSTOMER_ID = CUSTOMER_ID;
+
+
+select CUSTOMER.CUSTOMER_ID, FIRST_NAME, LAST_NAME, PAYMENT_ID,PAYMENT.CUSTOMER_ID,AMOUNT
+FROM CUSTOMER INNER JOIN PAYMENT ON CUSTOMER.CUSTOMER_ID = PAYMENT.CUSTOMER_ID;
+
+
+--LEFT JOIN
+SELET* FROM FILM
+--FILM_ID, TITLE AS TABLE A
+
+SELECT * FROM INVENTORY
+INVENTORY_ID, FILM_ID
+
+s
